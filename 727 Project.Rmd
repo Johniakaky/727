@@ -1,0 +1,101 @@
+---
+title: "727 Project"
+author: "Johnia Kakiziba"
+date: "2024-12-11"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction:
+
+Aim of this project is to investigates the relationship between real-world job market trends and how individuals search for employment information online in the United States during the period from 2020 to 2024.
+
+# Data:
+
+Dataset were collected from two data sources which are United States Bureau of Labor Statistics and google trends data searches. Data of civilian unemployment is from U.S. Department of Labor and the trend of job searching and internship terms from google search trend.
+
+# Analysis:
+
+The graphs show the civilian unemployment rate from 2020 to 2024 where by at the beginning of 2020, the unemployment rate increased to about 15 percent. This was highly due to the impact of COVID 19 pandemic which led to widespread job losses due to lockdown. The unemployment rate has steadily decreased through out 2020 to 2021. There is also unemployment stability around 3 - 4 percent from 2022 showing that there is steady job market.
+
+```{r, echo=FALSE, results='hide'}
+library(readxl)
+library(dplyr)
+library(ggplot2)
+X727_labor <- read_excel("C:/Users/U S E R/Desktop/727 labor.xlsx", 
+    col_types = c("date", "numeric", "numeric", 
+        "numeric", "numeric", "numeric", 
+        "numeric", "numeric", "numeric"))
+head(X727_labor)
+
+
+plus2020 <- X727_labor %>%
+  subset(Month >= "2020-01-01")%>%
+  rename (men_above20 = "Men, 20 years and over",
+          women_above20 = "Women, 20 years and over",
+          black = "Black or African American")
+
+
+head(plus2020)
+```
+
+```{r, echo=FALSE}
+ ggplot(plus2020, aes(x = Month, y = Total )) +
+  geom_line(color = "blue", size = 1) +
+  labs(title = "Civilian unemployment rate(2020-2024)", x = "Years", y = "Unemployment rate")
+ 
+```
+
+Graph presenting the civilian unemployment rate, seasonally adjusted
+
+From the google trend search, job searching has also decreased in 2020 compared to other years. In comparison with the internship search, job search was lower by almost 30 percent job searching. However, both search seem to be highly seasonal despite the decrease of unemployment rate from the labor department.
+
+```{r echo= F, results='hide', message=FALSE}
+library(gtrendsR)
+```
+
+```{r job_opening_trends, echo=FALSE}
+
+job_opening_trends <- gtrends(c("job searching"), 
+                                 geo = "US", 
+                                 onlyInterest= TRUE,
+                                 low_search_volume = T)
+
+plot(job_opening_trends)
+
+
+```
+
+```{r job_opening_trends2, echo=FALSE}
+job_opening_trends2 <- gtrends(c( "internships"), 
+                                 geo = "US", 
+                                 onlyInterest= TRUE,
+                                  )
+
+plot(job_opening_trends2)
+```
+
+# Conclusion:
+
+The trend is rising in search frequencies for job-searching and internships terms despite low unemployment. This can be contributed by:
+
+1\. Individuals often seek better opportunities, higher salaries, or a career change. As the economy improves, people feel more confident about exploring new options. There might be a desire in career transition.
+
+2\. Younger job seekers and students might be searching more actively for internships or remote work opportunities as these become more prevalent and competitive.
+
+3\. Even with low unemployment, people might search for job-related information due to economic uncertainty or fear of potential layoffs, especially if certain sectors are volatile.
+
+4\. Workers might be focusing on developing new skills or switching industries post-pandemic, leading to increased searches for job opportunities, training, or education.
+
+5\. The pandemic may have made people more aware of the importance of career planning and job opportunities, prompting more people to search online for job-related information.
+
+Possible limitations of the analysis:
+
+1\. The civilian unemployment rate is aggregated across large demographic groups. Variations within smaller subgroups (e.g., by race, age, or region) might not be fully captured.
+
+2\. Not everyone uses the internet to search for jobs or information. This analysis may under represent individuals who lack internet access, especially in rural or economically disadvantaged areas
+
+3\. Search terms like "job search" or "internships" might be used in contexts unrelated to employment (e.g., academic searches or curiosity), which could dilute the relevance of the data.
